@@ -212,8 +212,47 @@ namespace AutosalonApp {
             MessageBox::Show(L"База успешно сохранена в файл cars.txt!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
         }
 
+        void LoadFromFile(String^ path) {
+            try {
+                if (!System::IO::File::Exists(path)) {
+                    MessageBox::Show(L"Файл базы данных не найден. Сначала сохраните данные.", L"Внимание", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+                    return;
+                }
+
+                System::IO::StreamReader^ reader = gcnew System::IO::StreamReader(path, System::Text::Encoding::UTF8);
+                carDataGridView->Rows->Clear();
+
+                String^ line;
+                while ((line = reader->ReadLine()) != nullptr) {
+                    if (String::IsNullOrWhiteSpace(line)) continue;
+
+                    cli::array<String^>^ parts = line->Split(';');
+                    if (parts->Length >= 4) {
+                        String^ brand = parts[0]->Trim();
+                        String^ model = parts[1]->Trim();
+                        int year = 0;
+                        double price = 0.0;
+
+                        if (Int32::TryParse(parts[2]->Trim(), year) && Double::TryParse(parts[3]->Trim(), price)) {
+                            Car^ loadedCar = gcnew Car(brand, model, year, price, L"Не указано", L"");
+                            carDataGridView->Rows->Add(loadedCar->Brand, loadedCar->Model, loadedCar->Year, loadedCar->Price);
+                        } else {
+                            MessageBox::Show(L"Ошибка формата чисел в строке: " + line, L"Ошибка чтения", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+                        }
+                    } else {
+                        MessageBox::Show(L"Поврежденная строка в базе: " + line, L"Ошибка чтения", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+                    }
+                }
+                reader->Close();
+                MessageBox::Show(L"База успешно загружена!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
+            }
+            catch (Exception^ ex) {
+                MessageBox::Show(L"Произошла ошибка при загрузке: " + ex->Message, L"Критическая ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error);
+            }
+        }
+
         void OnLoadClick(Object^ sender, EventArgs^ e) {
-            MessageBox::Show(L"Кнопка 'Загрузить базу' нажата!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
+            LoadFromFile(L"cars.txt");
         }
     };
 }
