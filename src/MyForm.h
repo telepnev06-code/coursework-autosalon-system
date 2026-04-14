@@ -30,6 +30,8 @@ namespace AutosalonApp {
         // Кнопки
         Button^ addButton;
         Button^ deleteButton;
+        Button^ btnSave;
+        Button^ btnLoad;
 
     public:
         MyForm() {
@@ -104,6 +106,20 @@ namespace AutosalonApp {
             deleteButton->Size = System::Drawing::Size(120, 35);
             deleteButton->Click += gcnew EventHandler(this, &MyForm::OnDeleteClick);
 
+            // Кнопка Сохранить базу
+            btnSave = gcnew Button();
+            btnSave->Text = L"Сохранить базу";
+            btnSave->Location = Point(270, 350);
+            btnSave->Size = System::Drawing::Size(140, 35);
+            btnSave->Click += gcnew EventHandler(this, &MyForm::OnSaveClick);
+
+            // Кнопка Загрузить базу
+            btnLoad = gcnew Button();
+            btnLoad->Text = L"Загрузить базу";
+            btnLoad->Location = Point(420, 350);
+            btnLoad->Size = System::Drawing::Size(140, 35);
+            btnLoad->Click += gcnew EventHandler(this, &MyForm::OnLoadClick);
+
             // Добавляем все элементы на форму
             this->Controls->Add(systemLabel);
             this->Controls->Add(carDataGridView);
@@ -119,6 +135,8 @@ namespace AutosalonApp {
             
             this->Controls->Add(addButton);
             this->Controls->Add(deleteButton);
+            this->Controls->Add(btnSave);
+            this->Controls->Add(btnLoad);
         }
 
     private:
@@ -168,6 +186,13 @@ namespace AutosalonApp {
             } else {
                 MessageBox::Show(L"Пожалуйста, выберите строку для удаления.", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
             }
+        }
+        void OnSaveClick(Object^ sender, EventArgs^ e) {
+            MessageBox::Show(L"Кнопка 'Сохранить базу' нажата!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
+        }
+
+        void OnLoadClick(Object^ sender, EventArgs^ e) {
+            MessageBox::Show(L"Кнопка 'Загрузить базу' нажата!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
         }
     };
 }
