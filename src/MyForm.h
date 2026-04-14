@@ -95,14 +95,14 @@ namespace AutosalonApp {
             addButton->Text = L"Добавить";
             addButton->Location = Point(10, 350);
             addButton->Size = System::Drawing::Size(120, 35);
-            addButton->Click += gcnew EventHandler(this, &MyForm::OnActionClick);
+            addButton->Click += gcnew EventHandler(this, &MyForm::OnAddClick);
 
             // Кнопка Удалить
             deleteButton = gcnew Button();
             deleteButton->Text = L"Удалить";
             deleteButton->Location = Point(140, 350);
             deleteButton->Size = System::Drawing::Size(120, 35);
-            deleteButton->Click += gcnew EventHandler(this, &MyForm::OnActionClick);
+            deleteButton->Click += gcnew EventHandler(this, &MyForm::OnDeleteClick);
 
             // Добавляем все элементы на форму
             this->Controls->Add(systemLabel);
@@ -122,8 +122,52 @@ namespace AutosalonApp {
         }
 
     private:
-        void OnActionClick(Object^ sender, EventArgs^ e) {
-            MessageBox::Show(L"Кнопка нажата!", L"Действие", MessageBoxButtons::OK, MessageBoxIcon::Information);
+        void OnAddClick(Object^ sender, EventArgs^ e) {
+            String^ brand = brandTextBox->Text->Trim();
+            String^ model = modelTextBox->Text->Trim();
+            String^ yearStr = yearTextBox->Text->Trim();
+            String^ priceStr = priceTextBox->Text->Trim();
+
+            if (String::IsNullOrEmpty(brand) || String::IsNullOrEmpty(model) ||
+                String::IsNullOrEmpty(yearStr) || String::IsNullOrEmpty(priceStr)) {
+                MessageBox::Show(L"Пожалуйста, заполните все поля.", L"Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+                return;
+            }
+
+            int year = 0;
+            double price = 0.0;
+
+            if (!Int32::TryParse(yearStr, year) || year < 1886) {
+                MessageBox::Show(L"Пожалуйста, введите корректный год.", L"Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+                return;
+            }
+
+            if (!Double::TryParse(priceStr, price) || price < 0) {
+                MessageBox::Show(L"Пожалуйста, введите корректную цену.", L"Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+                return;
+            }
+
+            Car^ newCar = gcnew Car(brand, model, year, price, L"Новая", L"");
+            carDataGridView->Rows->Add(newCar->Brand, newCar->Model, newCar->Year, newCar->Price);
+
+            brandTextBox->Clear();
+            modelTextBox->Clear();
+            yearTextBox->Clear();
+            priceTextBox->Clear();
+        }
+
+        void OnDeleteClick(Object^ sender, EventArgs^ e) {
+            if (carDataGridView->SelectedRows->Count > 0) {
+                for (int i = carDataGridView->SelectedRows->Count - 1; i >= 0; i--) {
+                    if (!carDataGridView->SelectedRows[i]->IsNewRow) {
+                        carDataGridView->Rows->Remove(carDataGridView->SelectedRows[i]);
+                    }
+                }
+            } else if (carDataGridView->CurrentRow != nullptr && !carDataGridView->CurrentRow->IsNewRow) {
+                carDataGridView->Rows->Remove(carDataGridView->CurrentRow);
+            } else {
+                MessageBox::Show(L"Пожалуйста, выберите строку для удаления.", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
+            }
         }
     };
 }
