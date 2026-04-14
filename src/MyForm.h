@@ -187,8 +187,29 @@ namespace AutosalonApp {
                 MessageBox::Show(L"Пожалуйста, выберите строку для удаления.", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
             }
         }
+        void SaveToFile(String^ path) {
+            try {
+                System::IO::StreamWriter^ writer = gcnew System::IO::StreamWriter(path, false, System::Text::Encoding::UTF8);
+                for (int i = 0; i < carDataGridView->Rows->Count; i++) {
+                    if (!carDataGridView->Rows[i]->IsNewRow) {
+                        String^ brand = Convert::ToString(carDataGridView->Rows[i]->Cells[0]->Value);
+                        String^ model = Convert::ToString(carDataGridView->Rows[i]->Cells[1]->Value);
+                        String^ year = Convert::ToString(carDataGridView->Rows[i]->Cells[2]->Value);
+                        String^ price = Convert::ToString(carDataGridView->Rows[i]->Cells[3]->Value);
+                        
+                        writer->WriteLine(brand + L";" + model + L";" + year + L";" + price);
+                    }
+                }
+                writer->Close();
+            }
+            catch (Exception^ ex) {
+                MessageBox::Show(L"Ошибка при сохранении файла: " + ex->Message, L"Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error);
+            }
+        }
+
         void OnSaveClick(Object^ sender, EventArgs^ e) {
-            MessageBox::Show(L"Кнопка 'Сохранить базу' нажата!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
+            SaveToFile(L"cars.txt");
+            MessageBox::Show(L"База успешно сохранена в файл cars.txt!", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
         }
 
         void OnLoadClick(Object^ sender, EventArgs^ e) {
