@@ -43,6 +43,7 @@ namespace AutosalonApp {
         // --- Вкладка Подбор (Заготовка) ---
         Label^ clientSelectLabel;
         ComboBox^ clientComboBox;
+        Label^ clientRequestLabel;
         Button^ refreshClientsButton;
         Button^ matchButton;
         Button^ orderButton;
@@ -84,6 +85,7 @@ namespace AutosalonApp {
             carDataGridView->Columns[4]->Name = L"Рын. стоимость";
             carDataGridView->Columns[5]->Name = L"Состояние";
             carDataGridView->Columns[6]->Name = L"Характеристики";
+            carDataGridView->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
 
             // Марка
             brandLabel = gcnew Label(); brandLabel->Text = L"Марка:"; brandLabel->Location = Point(10, 400); brandLabel->AutoSize = true;
@@ -145,6 +147,7 @@ namespace AutosalonApp {
             clientDataGridView->Columns[3]->Name = L"Желаемая Марка";
             clientDataGridView->Columns[4]->Name = L"Желаемая Модель";
             clientDataGridView->Columns[5]->Name = L"Желаемое Состояние";
+            clientDataGridView->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
 
             // ФИО
             nameLabel = gcnew Label(); nameLabel->Text = L"ФИО:"; nameLabel->Location = Point(10, 400); nameLabel->AutoSize = true;
@@ -195,6 +198,10 @@ namespace AutosalonApp {
             
             clientComboBox = gcnew ComboBox(); clientComboBox->Location = Point(130, 12); clientComboBox->Width = 200;
             clientComboBox->DropDownStyle = ComboBoxStyle::DropDownList;
+            clientComboBox->SelectedIndexChanged += gcnew EventHandler(this, &MyForm::OnClientSelectionChanged);
+            
+            clientRequestLabel = gcnew Label(); clientRequestLabel->Location = Point(470, 15); clientRequestLabel->AutoSize = true;
+            clientRequestLabel->Text = L"Заявка: -";
             
             refreshClientsButton = gcnew Button(); refreshClientsButton->Text = L"Обновить список"; refreshClientsButton->Location = Point(340, 10); refreshClientsButton->Size = System::Drawing::Size(120, 25); refreshClientsButton->Click += gcnew EventHandler(this, &MyForm::OnRefreshClientsClick);
             
@@ -213,9 +220,11 @@ namespace AutosalonApp {
             matchingDataGridView->Columns[4]->Name = L"Рын. стоимость";
             matchingDataGridView->Columns[5]->Name = L"Состояние";
             matchingDataGridView->Columns[6]->Name = L"Характеристики";
+            matchingDataGridView->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
 
             tabMatching->Controls->Add(clientSelectLabel);
             tabMatching->Controls->Add(clientComboBox);
+            tabMatching->Controls->Add(clientRequestLabel);
             tabMatching->Controls->Add(refreshClientsButton);
             tabMatching->Controls->Add(matchButton);
             tabMatching->Controls->Add(orderButton);
@@ -536,6 +545,25 @@ namespace AutosalonApp {
                 clientComboBox->SelectedIndex = 0;
             } else {
                 MessageBox::Show(L"Список клиентов пуст. Перейдите на вкладку 'Клиенты' и добавьте данные.", L"Информация", MessageBoxButtons::OK, MessageBoxIcon::Information);
+            }
+        }
+
+        void OnClientSelectionChanged(Object^ sender, EventArgs^ e) {
+            if (clientComboBox->SelectedIndex == -1) {
+                clientRequestLabel->Text = L"Заявка: -";
+                return;
+            }
+            String^ selectedClientName = clientComboBox->SelectedItem->ToString();
+            for (int i = 0; i < clientDataGridView->Rows->Count; i++) {
+                if (!clientDataGridView->Rows[i]->IsNewRow) {
+                    if (Convert::ToString(clientDataGridView->Rows[i]->Cells[0]->Value) == selectedClientName) {
+                        String^ cBudget = Convert::ToString(clientDataGridView->Rows[i]->Cells[2]->Value);
+                        String^ cBrand = Convert::ToString(clientDataGridView->Rows[i]->Cells[3]->Value);
+                        String^ cModel = Convert::ToString(clientDataGridView->Rows[i]->Cells[4]->Value);
+                        clientRequestLabel->Text = L"Заявка: " + cBrand + L" " + cModel + L" до " + cBudget + L" у.е.";
+                        break;
+                    }
+                }
             }
         }
 
