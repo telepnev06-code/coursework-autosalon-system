@@ -19,12 +19,12 @@ namespace AutosalonApp {
 
         // --- Вкладка Автомобили ---
         DataGridView^ carDataGridView;
-        Label^ brandLabel; TextBox^ brandTextBox;
-        Label^ modelLabel; TextBox^ modelTextBox;
+        Label^ brandLabel; ComboBox^ brandComboBox;
+        Label^ modelLabel; ComboBox^ modelComboBox;
         Label^ yearLabel; TextBox^ yearTextBox;
         Label^ priceLabel; TextBox^ priceTextBox;
         Label^ mvLabel; TextBox^ mvTextBox;
-        Label^ conditionLabel; TextBox^ conditionTextBox;
+        Label^ conditionLabel; ComboBox^ conditionComboBox;
         Label^ specsLabel; TextBox^ specsTextBox;
         Button^ addCarButton; Button^ deleteCarButton;
         Button^ saveCarsButton; Button^ loadCarsButton;
@@ -34,9 +34,9 @@ namespace AutosalonApp {
         Label^ nameLabel; TextBox^ nameTextBox;
         Label^ phoneLabel; TextBox^ phoneTextBox;
         Label^ budgetLabel; TextBox^ budgetTextBox;
-        Label^ reqBrandLabel; TextBox^ reqBrandTextBox;
-        Label^ reqModelLabel; TextBox^ reqModelTextBox;
-        Label^ reqConditionLabel; TextBox^ reqConditionTextBox;
+        Label^ reqBrandLabel; ComboBox^ reqBrandComboBox;
+        Label^ reqModelLabel; ComboBox^ reqModelComboBox;
+        Label^ reqConditionLabel; ComboBox^ reqConditionComboBox;
         Button^ addClientButton; Button^ deleteClientButton;
         Button^ saveClientsButton; Button^ loadClientsButton;
 
@@ -87,11 +87,13 @@ namespace AutosalonApp {
 
             // Марка
             brandLabel = gcnew Label(); brandLabel->Text = L"Марка:"; brandLabel->Location = Point(10, 400); brandLabel->AutoSize = true;
-            brandTextBox = gcnew TextBox(); brandTextBox->Location = Point(10, 420); brandTextBox->Width = 100;
+            brandComboBox = gcnew ComboBox(); brandComboBox->Location = Point(10, 420); brandComboBox->Width = 100;
+            brandComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Toyota", L"BMW", L"Mercedes-Benz", L"Audi", L"Ford", L"Lada", L"Volkswagen", L"Kia", L"Hyundai", L"Renault", L"Nissan", L"Chevrolet" });
 
             // Модель
             modelLabel = gcnew Label(); modelLabel->Text = L"Модель:"; modelLabel->Location = Point(120, 400); modelLabel->AutoSize = true;
-            modelTextBox = gcnew TextBox(); modelTextBox->Location = Point(120, 420); modelTextBox->Width = 100;
+            modelComboBox = gcnew ComboBox(); modelComboBox->Location = Point(120, 420); modelComboBox->Width = 100;
+            modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Camry", L"Corolla", L"RAV4", L"X5", L"3 Series", L"E-Class", L"C-Class", L"A4", L"Focus", L"Vesta", L"Granta", L"Polo", L"Rio", L"Solaris", L"Logan", L"Duster" });
 
             // Год
             yearLabel = gcnew Label(); yearLabel->Text = L"Год:"; yearLabel->Location = Point(230, 400); yearLabel->AutoSize = true;
@@ -107,7 +109,8 @@ namespace AutosalonApp {
 
             // Состояние
             conditionLabel = gcnew Label(); conditionLabel->Text = L"Состояние:"; conditionLabel->Location = Point(470, 400); conditionLabel->AutoSize = true;
-            conditionTextBox = gcnew TextBox(); conditionTextBox->Location = Point(470, 420); conditionTextBox->Width = 100;
+            conditionComboBox = gcnew ComboBox(); conditionComboBox->Location = Point(470, 420); conditionComboBox->Width = 100;
+            conditionComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Новое", L"Отличное", L"Хорошее", L"Удовлетворительное", L"Требует ремонта" });
 
             // Спецификации
             specsLabel = gcnew Label(); specsLabel->Text = L"Характеристики:"; specsLabel->Location = Point(580, 400); specsLabel->AutoSize = true;
@@ -120,12 +123,12 @@ namespace AutosalonApp {
             loadCarsButton = gcnew Button(); loadCarsButton->Text = L"Загрузить БД"; loadCarsButton->Location = Point(360, 460); loadCarsButton->Size = System::Drawing::Size(120, 35); loadCarsButton->Click += gcnew EventHandler(this, &MyForm::OnLoadCarsClick);
 
             tabCars->Controls->Add(carDataGridView);
-            tabCars->Controls->Add(brandLabel); tabCars->Controls->Add(brandTextBox);
-            tabCars->Controls->Add(modelLabel); tabCars->Controls->Add(modelTextBox);
+            tabCars->Controls->Add(brandLabel); tabCars->Controls->Add(brandComboBox);
+            tabCars->Controls->Add(modelLabel); tabCars->Controls->Add(modelComboBox);
             tabCars->Controls->Add(yearLabel); tabCars->Controls->Add(yearTextBox);
             tabCars->Controls->Add(priceLabel); tabCars->Controls->Add(priceTextBox);
             tabCars->Controls->Add(mvLabel); tabCars->Controls->Add(mvTextBox);
-            tabCars->Controls->Add(conditionLabel); tabCars->Controls->Add(conditionTextBox);
+            tabCars->Controls->Add(conditionLabel); tabCars->Controls->Add(conditionComboBox);
             tabCars->Controls->Add(specsLabel); tabCars->Controls->Add(specsTextBox);
             tabCars->Controls->Add(addCarButton); tabCars->Controls->Add(deleteCarButton);
             tabCars->Controls->Add(saveCarsButton); tabCars->Controls->Add(loadCarsButton);
@@ -157,15 +160,18 @@ namespace AutosalonApp {
 
             // Желаемая Марка
             reqBrandLabel = gcnew Label(); reqBrandLabel->Text = L"Жел. Марка:"; reqBrandLabel->Location = Point(340, 400); reqBrandLabel->AutoSize = true;
-            reqBrandTextBox = gcnew TextBox(); reqBrandTextBox->Location = Point(340, 420); reqBrandTextBox->Width = 100;
+            reqBrandComboBox = gcnew ComboBox(); reqBrandComboBox->Location = Point(340, 420); reqBrandComboBox->Width = 100;
+            reqBrandComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Любая", L"Toyota", L"BMW", L"Mercedes-Benz", L"Audi", L"Ford", L"Lada", L"Volkswagen", L"Kia", L"Hyundai", L"Renault", L"Nissan", L"Chevrolet" });
 
             // Желаемая Модель
             reqModelLabel = gcnew Label(); reqModelLabel->Text = L"Жел. Модель:"; reqModelLabel->Location = Point(450, 400); reqModelLabel->AutoSize = true;
-            reqModelTextBox = gcnew TextBox(); reqModelTextBox->Location = Point(450, 420); reqModelTextBox->Width = 100;
+            reqModelComboBox = gcnew ComboBox(); reqModelComboBox->Location = Point(450, 420); reqModelComboBox->Width = 100;
+            reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Любая", L"Camry", L"Corolla", L"RAV4", L"X5", L"3 Series", L"E-Class", L"C-Class", L"A4", L"Focus", L"Vesta", L"Granta", L"Polo", L"Rio", L"Solaris", L"Logan", L"Duster" });
 
             // Желаемое состояние
             reqConditionLabel = gcnew Label(); reqConditionLabel->Text = L"Жел. Состояние:"; reqConditionLabel->Location = Point(560, 400); reqConditionLabel->AutoSize = true;
-            reqConditionTextBox = gcnew TextBox(); reqConditionTextBox->Location = Point(560, 420); reqConditionTextBox->Width = 100;
+            reqConditionComboBox = gcnew ComboBox(); reqConditionComboBox->Location = Point(560, 420); reqConditionComboBox->Width = 100;
+            reqConditionComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Любое", L"Новое", L"Отличное", L"Хорошее", L"Удовлетворительное", L"Требует ремонта" });
 
             // Кнопки
             addClientButton = gcnew Button(); addClientButton->Text = L"Добавить"; addClientButton->Location = Point(10, 460); addClientButton->Size = System::Drawing::Size(100, 35); addClientButton->Click += gcnew EventHandler(this, &MyForm::OnAddClientClick);
@@ -177,9 +183,9 @@ namespace AutosalonApp {
             tabClients->Controls->Add(nameLabel); tabClients->Controls->Add(nameTextBox);
             tabClients->Controls->Add(phoneLabel); tabClients->Controls->Add(phoneTextBox);
             tabClients->Controls->Add(budgetLabel); tabClients->Controls->Add(budgetTextBox);
-            tabClients->Controls->Add(reqBrandLabel); tabClients->Controls->Add(reqBrandTextBox);
-            tabClients->Controls->Add(reqModelLabel); tabClients->Controls->Add(reqModelTextBox);
-            tabClients->Controls->Add(reqConditionLabel); tabClients->Controls->Add(reqConditionTextBox);
+            tabClients->Controls->Add(reqBrandLabel); tabClients->Controls->Add(reqBrandComboBox);
+            tabClients->Controls->Add(reqModelLabel); tabClients->Controls->Add(reqModelComboBox);
+            tabClients->Controls->Add(reqConditionLabel); tabClients->Controls->Add(reqConditionComboBox);
             tabClients->Controls->Add(addClientButton); tabClients->Controls->Add(deleteClientButton);
             tabClients->Controls->Add(saveClientsButton); tabClients->Controls->Add(loadClientsButton);
         }
@@ -217,12 +223,12 @@ namespace AutosalonApp {
         }
 
         void OnAddCarClick(Object^ sender, EventArgs^ e) {
-            String^ brand = brandTextBox->Text->Trim();
-            String^ model = modelTextBox->Text->Trim();
+            String^ brand = brandComboBox->Text->Trim();
+            String^ model = modelComboBox->Text->Trim();
             String^ yearStr = yearTextBox->Text->Trim();
             String^ priceStr = priceTextBox->Text->Trim();
             String^ mvStr = mvTextBox->Text->Trim();
-            String^ condition = conditionTextBox->Text->Trim();
+            String^ condition = conditionComboBox->Text->Trim();
             String^ specs = specsTextBox->Text->Trim();
 
             if (String::IsNullOrEmpty(brand) || String::IsNullOrEmpty(model) ||
@@ -254,12 +260,12 @@ namespace AutosalonApp {
             Car^ newCar = gcnew Car(brand, model, year, price, mv, condition, specs);
             carDataGridView->Rows->Add(newCar->Brand, newCar->Model, newCar->Year, newCar->Price, newCar->MarketValue, newCar->Condition, newCar->Specs);
 
-            brandTextBox->Clear();
-            modelTextBox->Clear();
+            brandComboBox->Text = L"";
+            modelComboBox->Text = L"";
             yearTextBox->Clear();
             priceTextBox->Clear();
             mvTextBox->Clear();
-            conditionTextBox->Clear();
+            conditionComboBox->Text = L"";
             specsTextBox->Clear();
         }
 
@@ -361,9 +367,9 @@ namespace AutosalonApp {
             String^ name = nameTextBox->Text->Trim();
             String^ phone = phoneTextBox->Text->Trim();
             String^ budgetStr = budgetTextBox->Text->Trim();
-            String^ rBrand = reqBrandTextBox->Text->Trim();
-            String^ rModel = reqModelTextBox->Text->Trim();
-            String^ rCond = reqConditionTextBox->Text->Trim();
+            String^ rBrand = reqBrandComboBox->Text->Trim();
+            String^ rModel = reqModelComboBox->Text->Trim();
+            String^ rCond = reqConditionComboBox->Text->Trim();
 
             if (String::IsNullOrEmpty(name) || String::IsNullOrEmpty(phone) || String::IsNullOrEmpty(budgetStr)) {
                 MessageBox::Show(L"Пожалуйста, заполните ФИО, телефон и бюджет.", L"Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Warning);
@@ -382,9 +388,9 @@ namespace AutosalonApp {
             nameTextBox->Clear();
             phoneTextBox->Clear();
             budgetTextBox->Clear();
-            reqBrandTextBox->Clear();
-            reqModelTextBox->Clear();
-            reqConditionTextBox->Clear();
+            reqBrandComboBox->Text = L"";
+            reqModelComboBox->Text = L"";
+            reqConditionComboBox->Text = L"";
         }
 
         void OnDeleteClientClick(Object^ sender, EventArgs^ e) {
@@ -587,3 +593,4 @@ namespace AutosalonApp {
         }
     };
 }
+
