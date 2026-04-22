@@ -89,11 +89,11 @@ namespace AutosalonApp {
             brandLabel = gcnew Label(); brandLabel->Text = L"Марка:"; brandLabel->Location = Point(10, 400); brandLabel->AutoSize = true;
             brandComboBox = gcnew ComboBox(); brandComboBox->Location = Point(10, 420); brandComboBox->Width = 100;
             brandComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Toyota", L"BMW", L"Mercedes-Benz", L"Audi", L"Ford", L"Lada", L"Volkswagen", L"Kia", L"Hyundai", L"Renault", L"Nissan", L"Chevrolet" });
+            brandComboBox->SelectedIndexChanged += gcnew EventHandler(this, &MyForm::OnBrandSelectedIndexChanged);
 
             // Модель
             modelLabel = gcnew Label(); modelLabel->Text = L"Модель:"; modelLabel->Location = Point(120, 400); modelLabel->AutoSize = true;
             modelComboBox = gcnew ComboBox(); modelComboBox->Location = Point(120, 420); modelComboBox->Width = 100;
-            modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Camry", L"Corolla", L"RAV4", L"X5", L"3 Series", L"E-Class", L"C-Class", L"A4", L"Focus", L"Vesta", L"Granta", L"Polo", L"Rio", L"Solaris", L"Logan", L"Duster" });
 
             // Год
             yearLabel = gcnew Label(); yearLabel->Text = L"Год:"; yearLabel->Location = Point(230, 400); yearLabel->AutoSize = true;
@@ -162,11 +162,11 @@ namespace AutosalonApp {
             reqBrandLabel = gcnew Label(); reqBrandLabel->Text = L"Жел. Марка:"; reqBrandLabel->Location = Point(340, 400); reqBrandLabel->AutoSize = true;
             reqBrandComboBox = gcnew ComboBox(); reqBrandComboBox->Location = Point(340, 420); reqBrandComboBox->Width = 100;
             reqBrandComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Любая", L"Toyota", L"BMW", L"Mercedes-Benz", L"Audi", L"Ford", L"Lada", L"Volkswagen", L"Kia", L"Hyundai", L"Renault", L"Nissan", L"Chevrolet" });
+            reqBrandComboBox->SelectedIndexChanged += gcnew EventHandler(this, &MyForm::OnReqBrandSelectedIndexChanged);
 
             // Желаемая Модель
             reqModelLabel = gcnew Label(); reqModelLabel->Text = L"Жел. Модель:"; reqModelLabel->Location = Point(450, 400); reqModelLabel->AutoSize = true;
             reqModelComboBox = gcnew ComboBox(); reqModelComboBox->Location = Point(450, 420); reqModelComboBox->Width = 100;
-            reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Любая", L"Camry", L"Corolla", L"RAV4", L"X5", L"3 Series", L"E-Class", L"C-Class", L"A4", L"Focus", L"Vesta", L"Granta", L"Polo", L"Rio", L"Solaris", L"Logan", L"Duster" });
 
             // Желаемое состояние
             reqConditionLabel = gcnew Label(); reqConditionLabel->Text = L"Жел. Состояние:"; reqConditionLabel->Location = Point(560, 400); reqConditionLabel->AutoSize = true;
@@ -220,6 +220,52 @@ namespace AutosalonApp {
             tabMatching->Controls->Add(matchButton);
             tabMatching->Controls->Add(orderButton);
             tabMatching->Controls->Add(matchingDataGridView);
+        }
+
+        void OnBrandSelectedIndexChanged(Object^ sender, EventArgs^ e) {
+            modelComboBox->Items->Clear();
+            String^ brand = brandComboBox->Text;
+            if (brand == L"Toyota") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Camry", L"Corolla", L"RAV4" });
+            else if (brand == L"BMW") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"X5", L"3 Series" });
+            else if (brand == L"Mercedes-Benz") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"E-Class", L"C-Class" });
+            else if (brand == L"Audi") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"A4" });
+            else if (brand == L"Ford") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Focus" });
+            else if (brand == L"Lada") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Vesta", L"Granta" });
+            else if (brand == L"Volkswagen") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Polo" });
+            else if (brand == L"Kia") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Rio" });
+            else if (brand == L"Hyundai") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Solaris" });
+            else if (brand == L"Renault") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Logan", L"Duster" });
+            else if (brand == L"Nissan") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Qashqai", L"X-Trail", L"Almera" });
+            else if (brand == L"Chevrolet") modelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Cruze", L"Tahoe", L"Aveo" });
+            
+            if (modelComboBox->Items->Count > 0) {
+                modelComboBox->SelectedIndex = 0;
+            }
+        }
+
+        void OnReqBrandSelectedIndexChanged(Object^ sender, EventArgs^ e) {
+            reqModelComboBox->Items->Clear();
+            String^ brand = reqBrandComboBox->Text;
+            if (brand == L"Любая") {
+                reqModelComboBox->Items->Add(L"Любая");
+            } else {
+                reqModelComboBox->Items->Add(L"Любая");
+                if (brand == L"Toyota") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Camry", L"Corolla", L"RAV4" });
+                else if (brand == L"BMW") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"X5", L"3 Series" });
+                else if (brand == L"Mercedes-Benz") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"E-Class", L"C-Class" });
+                else if (brand == L"Audi") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"A4" });
+                else if (brand == L"Ford") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Focus" });
+                else if (brand == L"Lada") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Vesta", L"Granta" });
+                else if (brand == L"Volkswagen") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Polo" });
+                else if (brand == L"Kia") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Rio" });
+                else if (brand == L"Hyundai") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Solaris" });
+                else if (brand == L"Renault") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Logan", L"Duster" });
+                else if (brand == L"Nissan") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Qashqai", L"X-Trail", L"Almera" });
+                else if (brand == L"Chevrolet") reqModelComboBox->Items->AddRange(gcnew cli::array<Object^> { L"Cruze", L"Tahoe", L"Aveo" });
+            }
+            if (reqModelComboBox->Items->Count > 0) {
+                reqModelComboBox->SelectedIndex = 0;
+            }
         }
 
         void OnAddCarClick(Object^ sender, EventArgs^ e) {
